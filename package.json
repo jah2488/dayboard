@@ -1,0 +1,63 @@
+{
+  "name": "dayboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A local, always-on daily dashboard for Claude Code — morning brief, tasks, history, and a knowledge-graph brain. Designed for ADHD/dyslexia.",
+  "license": "MIT",
+  "author": "Justin Herrick",
+  "homepage": "https://github.com/jah2488/dayboard",
+  "repository": { "type": "git", "url": "https://github.com/jah2488/dayboard.git" },
+  "keywords": ["claude", "claude-code", "dashboard", "productivity", "knowledge-graph", "adhd"],
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "dev": "concurrently -n web,api -c cyan,magenta \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "vite",
+    "dev:api": "tsx watch server/index.ts",
+    "build": "vite build",
+    "start": "tsx server/index.ts",
+    "seed": "tsx server/seed.ts",
+    "typecheck": "tsc -b --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@fontsource/atkinson-hyperlegible": "^5.2.8",
+    "@fontsource/lexend": "^5.2.11",
+    "@hono/node-server": "^1.13.7",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@types/d3-force": "^3.0.10",
+    "d3-force": "^3.0.0",
+    "date-fns": "^4.1.0",
+    "hono": "^4.6.14",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^2.1.9",
+    "concurrently": "^9.1.0",
+    "jsdom": "^29.1.1",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^2.1.9"
+  }
+}

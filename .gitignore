@@ -1,0 +1,9 @@
+node_modules/
+dist/
+data/
+coverage/
+test-results/
+*.tsbuildinfo
+.DS_Store
+.playwright-mcp/
+state/

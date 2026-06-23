@@ -1,0 +1,54 @@
+{
+  "identity": {
+    "name": "",
+    "addressAs": "you"
+  },
+  "paths": {
+    "learningsDir": "~/Projects/learnings",
+    "claudeProjectsDir": "~/.claude/projects"
+  },
+  "schedule": {
+    "hour": 7,
+    "minute": 0
+  },
+  "models": {
+    "tag": "haiku",
+    "reason": "sonnet"
+  },
+  "github": {
+    "org": "",
+    "defaultChannel": "#code-review",
+    "repoChannels": {
+      "infra": { "channel": "#team-infra", "verified": true }
+    },
+    "repoKeywordRules": {
+      "monolith": [
+        { "keywords": ["billing", "invoice", "usage"], "channel": "#team-billing" },
+        { "keywords": ["frontend", "deploy", "page"], "channel": "#team-web" }
+      ]
+    }
+  },
+  "tabs": {
+    "today": true,
+    "trends": true,
+    "prs": true,
+    "learnings": true,
+    "sessions": true,
+    "brain": true
+  },
+  "routines": [
+    { "name": "morning-brief", "label": "Morning brief", "enabled": true },
+    { "name": "claude-sessions", "label": "Claude sessions", "enabled": true },
+    { "name": "partners", "label": "Tracker snapshot", "enabled": false }
+  ],
+  "connectors": [
+    { "id": "slack", "label": "Slack", "enabled": true },
+    { "id": "linear", "label": "Linear", "enabled": true },
+    { "id": "notion", "label": "Notion", "enabled": true },
+    { "id": "datadog", "label": "Datadog", "enabled": true },
+    { "id": "gmail", "label": "Gmail", "enabled": true },
+    { "id": "calendar", "label": "Calendar", "enabled": true },
+    { "id": "granola", "label": "Granola", "enabled": true },
+    { "id": "github", "label": "GitHub (gh CLI)", "enabled": true }
+  ]
+}
