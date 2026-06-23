@@ -176,4 +176,16 @@ describe("checkConfig", () => {
     process.env.SWEEP_CLAUDE_BIN = saved;
     expect(claudeCheck?.status).toBe("fail");
   });
+
+  it("warns when the learnings dir is empty, ok once it has markdown docs", () => {
+    const learn = join(dir, "learn-check");
+    mkdirSync(learn, { recursive: true });
+    process.env.LEARNINGS_DIR = learn; // env wins over the file path in tests
+    const learnCheck = () => cfg.checkConfig().checks.find((c) => c.id === "path-learnings");
+    expect(learnCheck()?.status).toBe("warn");
+    expect(learnCheck()?.detail).toMatch(/no markdown docs/i);
+    writeFileSync(join(learn, "2026-01-01-note.md"), "# note");
+    expect(learnCheck()?.status).toBe("ok");
+    expect(learnCheck()?.detail).toMatch(/1 markdown doc\b/);
+  });
 });

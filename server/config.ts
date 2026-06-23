@@ -5,6 +5,7 @@ import {
   existsSync,
   mkdirSync,
   readFileSync,
+  readdirSync,
   rmSync,
   statSync,
   writeFileSync,
@@ -268,6 +269,16 @@ function onPath(bin: string): boolean {
   return dirs.some((d) => executable(join(d, bin)));
 }
 
+// Count markdown docs in a dir (0 if missing/unreadable) — drives the
+// learnings-dir "is it actually populated?" check.
+function countMarkdown(dir: string): number {
+  try {
+    return readdirSync(dir).filter((f) => f.endsWith(".md")).length;
+  } catch {
+    return 0;
+  }
+}
+
 export function checkConfig(config = getConfig()): ConfigCheck {
   const checks: ConfigCheckItem[] = [];
   const add = (item: ConfigCheckItem) => checks.push(item);
@@ -290,17 +301,29 @@ export function checkConfig(config = getConfig()): ConfigCheck {
       : "No name set — the greeting and routines stay generic.",
   });
 
-  for (const [key, dir] of [
-    ["learnings", config.paths.learningsDir],
-    ["claude-sessions", config.paths.claudeProjectsDir],
-  ] as const) {
-    add({
-      id: `path-${key}`,
-      label: key === "learnings" ? "Learnings directory" : "Claude transcripts",
-      status: existsSync(dir) ? "ok" : "warn",
-      detail: existsSync(dir) ? dir : `Not found: ${dir}`,
-    });
-  }
+  // Learnings dir is read-only to dayboard: it surfaces .md notes you put there
+  // (Learnings tab + Brain) but never writes them. An existing-but-empty dir is
+  // the common blind spot, so count the docs and nudge when there are none.
+  const learnDir = config.paths.learningsDir;
+  const mdDocs = countMarkdown(learnDir);
+  add({
+    id: "path-learnings",
+    label: "Learnings directory",
+    status: !existsSync(learnDir) || mdDocs === 0 ? "warn" : "ok",
+    detail: !existsSync(learnDir)
+      ? `Not found: ${learnDir}`
+      : mdDocs === 0
+        ? `${learnDir} — no markdown docs yet. dayboard reads notes from here but never creates them; have Claude (or you) save .md notes there. See the README.`
+        : `${learnDir} (${mdDocs} markdown doc${mdDocs === 1 ? "" : "s"})`,
+  });
+
+  const txDir = config.paths.claudeProjectsDir;
+  add({
+    id: "path-claude-sessions",
+    label: "Claude transcripts",
+    status: existsSync(txDir) ? "ok" : "warn",
+    detail: existsSync(txDir) ? txDir : `Not found: ${txDir}`,
+  });
 
   const claudeBin = process.env.SWEEP_CLAUDE_BIN ?? "claude";
   const claudeOk = onPath(claudeBin);

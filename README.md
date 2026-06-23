@@ -87,6 +87,25 @@ use the **⚙ Settings** tab:
 | `routines` | Which sweep routines run, in order. |
 | `connectors` | Connectors you expect the sweep to use (drives the setup check). |
 
+### Feeding the Learnings tab & Brain
+
+Heads-up: **dayboard only *reads* your learnings directory — it never writes to it.**
+The Learnings tab and the Brain's learnings half stay empty until *you* put markdown notes
+there. (Your Claude Code **sessions** are different — they're created automatically just by
+using Claude Code, so the Sessions tab and the Brain's session half populate on their own.)
+
+The recommended way to fill it is to have Claude save research notes there as you work. Add
+something like this to your global `~/.claude/CLAUDE.md`:
+
+```
+When asked to produce notes, takeaways, investigation reports, or other documents I'll
+revisit later, write them to ~/Projects/learnings/YYYY-MM-DD-{kebab-slug}.md
+(matching paths.learningsDir in dayboard's config).
+```
+
+Or just drop `.md` files in the directory yourself. The setup check (⚙ Settings) reports how
+many docs it finds, so you'll know if it's empty.
+
 ### Sweep prompts
 
 A **routine** is a prompt run during the sweep; its markdown output is split into cards by
