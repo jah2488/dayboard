@@ -10,8 +10,22 @@ board over MCP. Default URL: `http://localhost:4747`.
 
 ## Always-on + morning sweep (launchd, macOS)
 
+> **Headless auth (required).** A launchd agent has no interactive session, so
+> `claude` can't read your login-keychain credentials — the sweep will hang and
+> fail ("not logged in" / timeout). Give it a long-lived token instead (uses your
+> subscription, no API billing):
+>
+> ```bash
+> claude setup-token                 # interactive once → copies a token
+> CLAUDE_CODE_OAUTH_TOKEN="<token>" scripts/install-launchd.sh   # bakes it into the agent
+> ```
+>
+> Re-run this if `claude` updates and the sweep starts failing again. To verify a
+> token works headlessly first:
+> `env -i HOME="$HOME" PATH="$PATH" CLAUDE_CODE_OAUTH_TOKEN="<token>" claude -p "Reply OK"`.
+
 1. Build the UI: `npm run build`
-2. Install both LaunchAgents: `scripts/install-launchd.sh`
+2. Install both LaunchAgents (with the token, per above): `scripts/install-launchd.sh`
    - Custom time/port: `MORNING_HOUR=8 MORNING_MIN=30 PORT=4747 scripts/install-launchd.sh`
    - Or set the time live from **⚙ Settings → Sweep schedule** in the app.
 3. Verify loaded: `launchctl list | grep dayboard` → `com.dayboard.server` (running) +

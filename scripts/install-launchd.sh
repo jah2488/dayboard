@@ -26,6 +26,16 @@ PATH_ENV="${NODE_DIR}:${CLAUDE_DIR}:/usr/bin:/bin:/usr/sbin:/sbin"
 SERVER_PLIST="${AGENTS_DIR}/com.dayboard.server.plist"
 MORNING_PLIST="${AGENTS_DIR}/com.dayboard.morning.plist"
 
+# Headless auth: under launchd there's no interactive session, so claude can't
+# read its login-keychain credentials (it hangs/​fails "not logged in"). Pass a
+# long-lived token from `claude setup-token` (uses your subscription, no API
+# billing) so the sweep authenticates without the keychain. Optional but
+# required for the morning sweep to work unattended.
+TOKEN_LINE=""
+if [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then
+  TOKEN_LINE="<key>CLAUDE_CODE_OAUTH_TOKEN</key><string>${CLAUDE_CODE_OAUTH_TOKEN}</string>"
+fi
+
 cat > "${SERVER_PLIST}" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -43,6 +53,7 @@ cat > "${SERVER_PLIST}" <<EOF
     <key>PATH</key><string>${PATH_ENV}</string>
     <key>PORT</key><string>${PORT}</string>
     <key>SWEEP_CLAUDE_BIN</key><string>${CLAUDE_BIN}</string>
+    ${TOKEN_LINE}
   </dict>
   <key>RunAtLoad</key><true/>
   <key>KeepAlive</key><true/>
